@@ -29,7 +29,7 @@
    - [Software Implementation](#57-software-implementation)
    - [Node Function](#58-node-function)
 
-##1.SYSTEM ARCHITECTURE:
+## 1.SYSTEM ARCHITECTURE:
 
 
 <img width="428" height="429" alt="image" src="https://github.com/user-attachments/assets/207ae018-bb4e-4e58-99ed-296f89141ee5" />
