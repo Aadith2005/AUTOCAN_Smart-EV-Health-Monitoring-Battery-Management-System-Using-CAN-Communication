@@ -1,9 +1,22 @@
 # AUTOCAN_Smart-EV-Health-Monitoring-Battery-Management-System-Using-CAN-Communication
 
-##SYSTEM ARCHITECTURE:
+##1.SYSTEM ARCHITECTURE:
 
 
 <img width="428" height="429" alt="image" src="https://github.com/user-attachments/assets/207ae018-bb4e-4e58-99ed-296f89141ee5" />
+
+
+## 2. Project Overview
+
+**AUTOCAN SMART** is a CAN-based EV health monitoring and battery management system designed to monitor important electrical and thermal parameters of an electric vehicle.
+
+The system uses three LPC2129-based nodes communicating through the Controller Area Network (CAN) protocol:
+
+- **Node 1 – Voltage and Current Monitoring:** Acquires voltage and current measurements using ADC interfaces and transmits the data over CAN.
+- **Node 2 – Temperature Monitoring:** Measures temperature using an LM35 sensor, controls the cooling fan based on a predefined threshold, and transmits temperature data over CAN.
+- **Node 3 – Central Monitoring Unit:** Receives data from both nodes, calculates electrical power, monitors fan status, and displays the system parameters on a 20×4 LCD.
+
+The project demonstrates distributed embedded system design, sensor interfacing, ADC-based data acquisition, CAN communication, and real-time monitoring using ARM7 microcontrollers.
 
 
 ## 3. Node 1 – Voltage and Current Monitoring Node
