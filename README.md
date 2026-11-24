@@ -258,7 +258,6 @@ CURRENT:1.5mA
 POWER:18.0W
 ```
 
-*Illustrative display output.*
 
 ### 5.7 Software Implementation
 
