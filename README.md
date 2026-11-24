@@ -1,5 +1,34 @@
 # AUTOCAN_Smart-EV-Health-Monitoring-Battery-Management-System-Using-CAN-Communication
 
+## Table of Contents
+
+1. [SYSTEM ARCHITECTURE](#1-SYSTEM-ARCHITECTURE)
+2. [Project Overview](#2-Project-Overview)
+3. [Node 1 – Voltage and Current Monitoring](#3-node-1--voltage-and-current-monitoring-node)
+   - [Hardware Components](#31-hardware-components)
+   - [Working Principle](#32-working-principle)
+   - [ADC Configuration](#33-adc-configuration)
+   - [CAN Data Transmission](#34-can-data-transmission)
+   - [Software Implementation](#35-software-implementation)
+   - [Node Function](#36-node-function)
+4. [Node 2 – Temperature Monitoring and CAN Transmission](#4-node-2--temperature-monitoring-and-can-transmitter)
+   - [Hardware Components](#41-hardware-components)
+   - [Working Principle](#42-working-principle)
+   - [ADC Configuration](#43-adc-configuration)
+   - [Temperature-Based Fan Control](#44-temperature-based-fan-control)
+   - [CAN Communication](#45-can-communication)
+   - [Software Implementation](#46-software-implementation)
+   - [Node Function](#47-node-function)
+5. [Node 3 – CAN Reception, Data Processing and LCD Display](#5-node-3--can-receiver-data-processing-and-lcd-display)
+   - [Hardware Components](#51-hardware-components)
+   - [Working Principle](#52-working-principle)
+   - [CAN Data Reception](#53-can-data-reception)
+   - [Power Calculation](#54-power-calculation)
+   - [Fan Status Monitoring](#55-fan-status-monitoring)
+   - [LCD Display](#56-lcd-display--204)
+   - [Software Implementation](#57-software-implementation)
+   - [Node Function](#58-node-function)
+
 ##1.SYSTEM ARCHITECTURE:
 
 
