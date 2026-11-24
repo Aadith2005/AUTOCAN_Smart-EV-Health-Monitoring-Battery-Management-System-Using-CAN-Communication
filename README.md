@@ -89,4 +89,196 @@ Node 1 continuously acquires voltage and current measurements using the respecti
 
 The transmitted information can be received by the other nodes for further processing and EV health monitoring.
 
+## 4. Node 2 – Temperature Monitoring and CAN Transmitter
+
+### 4.1 Hardware Components
+
+- **Microcontroller:** LPC2129 Development Board (ARM7)
+- **Temperature Sensor:** LM35
+- **ADC:** Built-in 10-bit ADC of LPC2129
+- **Cooling System:** DC Fan Motor
+- **Communication:** CAN Protocol
+
+### 4.2 Working Principle
+
+This node monitors the temperature of the system using an LM35 temperature sensor and activates the cooling mechanism when the temperature exceeds a predefined threshold.
+
+The operation is as follows:
+
+1. The LM35 generates an analog voltage proportional to the measured temperature.
+2. The analog output is connected to the LPC2129's internal ADC.
+3. The 10-bit ADC converts the analog voltage into a digital value.
+4. The ADC reading is converted into a temperature value in degrees Celsius.
+5. The measured temperature is compared against a predefined threshold of 30°C.
+6. When the temperature exceeds 30°C, the GPIO output connected to the cooling control circuit is activated.
+7. The temperature information is transmitted to the other nodes through the CAN network.
+
+### 4.3 ADC Configuration
+
+The LPC2129's built-in 10-bit ADC is used for temperature measurement.
+
+| Parameter | Configuration |
+|---|---|
+| ADC Resolution | 10 bits |
+| ADC Output Range | 0–1023 |
+| Reference Voltage | 3.3 V |
+| Temperature Sensor | LM35 |
+| Measurement Channel | ADC Channel 2 |
+
+The ADC conversion is implemented in `adc.c`.
+
+### 4.4 Temperature-Based Fan Control
+
+The measured temperature is compared against a threshold of 30°C.
+
+| Temperature Condition | GPIO P0.8 | GPIO P0.9 |
+|---|---|---|
+| Temperature > 30°C | LOW | HIGH |
+| Temperature ≤ 30°C | HIGH | HIGH |
+
+When the temperature exceeds the threshold, the output at P0.8 is driven LOW, controlling the cooling mechanism through the connected driver circuit.
+
+### 4.5 CAN Communication
+
+After measuring the temperature, the LPC2129 transmits the temperature information through its second CAN controller (CAN2).
+
+| CAN Parameter | Configuration |
+|---|---|
+| CAN Controller | CAN2 |
+| CAN Identifier | 0x102 |
+| Frame Type | Data Frame |
+| DLC | 8 Bytes |
+| TDA | Temperature Value |
+| TDB | 0 |
+| Transmission | Periodic |
+
+The temperature value is assigned to the CAN data register TDA, while TDB is set to zero.
+
+**CAN Data Frame Structure:**
+
+| TDA (4 Bytes) | TDB (4 Bytes) |
+|---|---|
+| Temperature Value | 0 |
+
+### 4.6 Software Implementation
+
+| Source File | Functionality |
+|---|---|
+| `MAIN.c` | Main application, temperature monitoring and fan control |
+| `adc.c` | Internal ADC configuration and temperature conversion |
+| `cantx_driver.c` | CAN initialization and data transmission |
+| `delay_ms.c` | Timer-based delay generation |
+| `project_header.h` | Header files, data types and function declarations |
+
+### 4.7 Node Function
+
+Node 2 continuously monitors the system temperature, controls the cooling mechanism based on the predefined temperature threshold and transmits the measured temperature through the CAN network.
+
+This enables the other nodes to receive temperature information and incorporate it into the overall EV health monitoring system.
+
+## 5. Node 3 – CAN Receiver, Data Processing and LCD Display
+
+### 5.1 Hardware Components
+
+- **Microcontroller:** LPC2129 Development Board (ARM7)
+- **Display:** 20×4 LCD Display
+- **Communication:** CAN Protocol
+- **Interface:** GPIO-based LCD interfacing
+
+### 5.2 Working Principle
+
+Node 3 acts as the central monitoring unit of the system. It receives sensor information from the other two nodes through CAN communication, processes the received data and displays the system parameters on a 20×4 LCD.
+
+The operation is as follows:
+
+1. Initializes the CAN receiver and LCD interface.
+2. Continuously monitors the CAN bus for incoming messages.
+3. Identifies the transmitting node using the CAN message identifier.
+4. Extracts voltage, current and temperature information from the received CAN data frames.
+5. Calculates electrical power using the received voltage and current values.
+6. Determines the cooling fan status based on the received temperature.
+7. Displays all monitored parameters on the 20×4 LCD.
+
+### 5.3 CAN Data Reception
+
+The LPC2129's second CAN controller (CAN2) is configured to receive messages from both transmitting nodes.
+
+The receiver identifies incoming messages using their CAN identifiers.
+
+| Transmitting Node | CAN ID | Received Information |
+|---|---|---|
+| Node 1 | 0x101 | Voltage and Current |
+| Node 2 | 0x102 | Temperature |
+
+The received data is extracted from the CAN reception registers (C2RDA and C2RDB) and stored in the corresponding variables for further processing.
+
+### 5.4 Power Calculation
+
+After receiving the voltage and current measurements from Node 1, the microcontroller calculates electrical power.
+
+**Power = Voltage × Current**
+
+The calculated power value is displayed on the LCD.
+
+### 5.5 Fan Status Monitoring
+
+The receiver also monitors the temperature information received from Node 2.
+
+Based on the received temperature, the fan status is determined using the following condition:
+
+| Temperature Condition | Fan Status |
+|---|---|
+| Temperature > 30°C | ON |
+| Temperature ≤ 30°C | OFF |
+
+This allows the user to monitor the cooling system status directly from the central display unit.
+
+### 5.6 LCD Display – 20×4
+
+A 20×4 LCD is interfaced with the LPC2129 using GPIO pins.
+
+The display presents four important parameters simultaneously:
+
+| LCD Row | Display Information |
+|---|---|
+| Row 1 | Temperature and Fan Status |
+| Row 2 | Voltage |
+| Row 3 | Current |
+| Row 4 | Calculated Power |
+
+**Example LCD Output:**
+
+```text
+TEMP:35C  FAN:ON
+
+VOLTAGE:12.0V
+
+CURRENT:1.5mA
+
+POWER:18.0W
+```
+
+*Illustrative display output.*
+
+### 5.7 Software Implementation
+
+The firmware is organized into modular source files.
+
+| Source File | Functionality |
+|---|---|
+| `main_rx.c` | Main application, CAN data processing, power calculation and LCD updates |
+| `canrx_driver.c` | CAN initialization and message reception |
+| `lcd_header.h` | LCD initialization, command, data and display functions |
+| `UART_header.h` | UART configuration and serial communication utility functions |
+| `delay_ms.c` | Timer-based delay generation |
+| `rx_project_header.h` | Header files, data types and function declarations |
+
+### 5.8 Node Function
+
+Node 3 serves as the central monitoring and display unit of AUTOCAN SMART.
+
+It collects voltage, current and temperature information from the transmitting nodes, calculates electrical power, monitors the cooling fan status and presents the processed information through a 20×4 LCD.
+
+This provides a centralized interface for observing the operating conditions of the EV monitoring system.
+
 
